@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 6839377233557828042}
   - component: {fileID: -7101354051661546104}
   - component: {fileID: -6116856825070965526}
+  - component: {fileID: -656066662786609237}
   m_Layer: 5
   m_Name: Item
   m_TagString: Untagged
@@ -101,3 +102,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47dac69e8f04a9f468ee0fe42af847e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ItemDragHandler
+--- !u!114 &-656066662786609237
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4035822355791157628}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 69ce9b315d763d74da4c84d73f74da6b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  ID: 0

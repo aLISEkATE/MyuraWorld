@@ -119,6 +119,51 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &4699104
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4699105}
+  - component: {fileID: 4699106}
+  m_Layer: 0
+  m_Name: ItemDictionary
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4699105
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4699104}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1677911328}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4699106
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4699104}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bc3abdfccd306c4ba9295a0d4283e2c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  itemPrefabs: []
 --- !u!1 &20357106
 GameObject:
   m_ObjectHideFlags: 0
@@ -7988,7 +8033,8 @@ Transform:
   m_LocalPosition: {x: 371.46625, y: 227.41467, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 4699105}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1677911329
@@ -8006,7 +8052,9 @@ MonoBehaviour:
   inventoryPanel: {fileID: 1855560598}
   slotPrefab: {fileID: 6206858438197145882, guid: e0438283de55eb44f9878b4ea6e29b5b, type: 3}
   slotCount: 40
-  itemPrefabs: []
+  itemPrefabs:
+  - {fileID: 4035822355791157628, guid: e316d8527ee5f19438b0674c2e96be5c, type: 3}
+  - {fileID: 2157339771605872241, guid: 4e51a997bbd8690469c1223ccbf4c3df, type: 3}
 --- !u!1 &1779667192
 GameObject:
   m_ObjectHideFlags: 0
