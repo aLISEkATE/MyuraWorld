@@ -8,8 +8,8 @@ public class ItemDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     Transform originalParent;
     CanvasGroup canvasGroup;
 
-    public float minDropDistance = 2f;
-    public float maxDropDistance = 3f;
+    public float minDropDistance = 0.2f;
+    public float maxDropDistance = 0.5f;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -96,8 +96,10 @@ public class ItemDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         }
 
         Vector2 dropOffset = Random.insideUnitCircle.normalized * Random.Range(minDropDistance,maxDropDistance);
-        Vector2 dropPosition = (Vector2)playerTransform.position * dropOffset;
+    
 
+        Vector2 dropPosition = (Vector2)playerTransform.position + dropOffset;
+        Debug.Log((Vector2)playerTransform.position + dropOffset);
         Instantiate(gameObject, dropPosition, Quaternion.identity);
         Destroy(gameObject);
     }
