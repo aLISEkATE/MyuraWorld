@@ -7,7 +7,9 @@ public class HotbarController : MonoBehaviour
 
     public GameObject hotbarPanel;
     public GameObject slotPrefab;
-    public int slotCount = 20;
+    public int slotCount = 10;
+
+    public int currentSlotNumber;
 
     private ItemDictionary itemDictionary;
 
@@ -25,28 +27,59 @@ public class HotbarController : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        for(int i = 0; i < slotCount; i++)
+        // Update is called once per frame
+        private void Update()
         {
-            //
-            if (Keyboard.current[hotbarKeys[i]].wasPressedThisFrame)
+            if (PauseController.IsGamePaused)
             {
-                UseItemInSlot(i);
+                 return;
+            }
+               
+            // Select hotbar slot
+            for (int i = 0; i < slotCount; i++)
+            {
+                if (Keyboard.current[hotbarKeys[i]].wasPressedThisFrame)
+                {
+                    currentSlotNumber = i;
+
+                    Debug.Log("Current slot - " + i+1);
+                }
+            }
+
+            // Use selected item
+            if (Mouse.current.leftButton.wasPressedThisFrame)
+            {
+                UseSelectedItem();
             }
         }
-    }
-    void UseItemInSlot(int index)
-    {
-        Slot slot = hotbarPanel.transform.GetChild(index).GetComponent<Slot>();
-        if(slot.currentItem != null)
+        public void UseSelectedItem()
+        {
+            if (PauseController.IsGamePaused)
             {
-                Item item = slot.currentItem.GetComponent<Item>();
-                item.UseItem();
+                 return;
             }
-    }
 
+            Slot slot = hotbarPanel.transform
+                .GetChild(currentSlotNumber)
+                .GetComponent<Slot>();
+
+            if (slot.currentItem == null)
+            {
+                Debug.Log("No item in selected slot.");
+                return;
+            }
+
+            IUse usableItem = slot.currentItem.GetComponent<IUse>();
+
+            if (usableItem != null)
+            {
+                usableItem.UseItem();
+            }
+            else
+            {
+                Debug.Log("Selected item cannot be used.");
+            }
+        }
     public List<InventorySaveData> GetHotbarItems()
     {
         List<InventorySaveData> hotbarData = new List<InventorySaveData>();
