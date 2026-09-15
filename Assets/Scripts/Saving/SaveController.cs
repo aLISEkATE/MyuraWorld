@@ -1,26 +1,29 @@
-
 using System.IO;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class SaveController : MonoBehaviour
-{
+{   
+    
     public GameObject dirtPrefab;
 
     private string saveLocation;
+
     private InventoryController inventoryController;
     private HotbarController hotbarController;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    private void Start()
     {
         saveLocation = Path.Combine(
             Application.persistentDataPath,
             "saveData.json"
         );
 
-        inventoryController = FindFirstObjectByType<InventoryController>();
-        hotbarController = FindFirstObjectByType<HotbarController>();
+        inventoryController =
+            FindFirstObjectByType<InventoryController>();
+
+        hotbarController =
+            FindFirstObjectByType<HotbarController>();
 
         LoadGame();
     }
@@ -28,41 +31,78 @@ public class SaveController : MonoBehaviour
     public void SaveGame()
     {
         // Find player
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        GameObject player =
+            GameObject.FindGameObjectWithTag("Player");
 
-        // Find all dirt objects
-        GameObject[] dirtObjects =
-            GameObject.FindGameObjectsWithTag("Dirt");
+     GameObject[] dirtObjects =
+    GameObject.FindGameObjectsWithTag("Dirt");
 
-        // Store dirt positions
-        List<Vector3> dirtPositions = new List<Vector3>();
+Debug.Log("Found " + dirtObjects.Length + " dirt objects.");
 
-        foreach (GameObject dirt in dirtObjects)
-        {
-            dirtPositions.Add(dirt.transform.position);
-        }
+List<DirtSaveData> dirtData =
+    new List<DirtSaveData>();
 
-        // Create the SaveData object
-        SaveData saveData = new SaveData();
+foreach (GameObject dirtObject in dirtObjects)
+{
+    Debug.Log("Checking dirt object: " + dirtObject.name);
 
-        // Store player position
-        saveData.playerPosition = player.transform.position;
+    Dirt dirt =
+        dirtObject.GetComponent<Dirt>();
 
-        // Store dirt positions
-        saveData.dirtPositions = dirtPositions;
+    if (dirt != null)
+    {
+        Debug.Log(
+            "Saving Dirt ID: " +
+            dirt.GetID()
+        );
 
-        // Store inventory
+        DirtSaveData data =
+            new DirtSaveData();
+
+        data.dirtID = dirt.GetID();
+        data.position = dirt.transform.position;
+        data.isWatered = dirt.isWatered;
+        data.hasSeed = dirt.hasSeed;
+
+        dirtData.Add(data);
+    }
+    else
+    {
+        Debug.LogWarning(
+            dirtObject.name +
+            " has the Dirt tag but no Dirt component!"
+        );
+    }
+}
+
+Debug.Log(
+    "Total dirt saved: " +
+    dirtData.Count
+);
+
+        // Create SaveData
+        SaveData saveData =
+            new SaveData();
+
+        saveData.playerPosition =
+            player.transform.position;
+
+        saveData.dirtData =
+            dirtData;
+
         saveData.inventorySaveData =
             inventoryController.GetInventoryItems();
 
-        // Store hotbar
         saveData.hotbarSaveData =
             hotbarController.GetHotbarItems();
 
-        // Convert SaveData to JSON and save it
+        // Convert to JSON and save
+        string json =
+            JsonUtility.ToJson(saveData, true);
+
         File.WriteAllText(
             saveLocation,
-            JsonUtility.ToJson(saveData, true)
+            json
         );
 
         Debug.Log("Game saved!");
@@ -70,48 +110,96 @@ public class SaveController : MonoBehaviour
 
     public void LoadGame()
     {
-        if (File.Exists(saveLocation))
+        if (!File.Exists(saveLocation))
         {
-            SaveData saveData =
-                JsonUtility.FromJson<SaveData>(
-                    File.ReadAllText(saveLocation)
-                );
+            Debug.Log("No save file found.");
 
-            // Load player position
-            GameObject player =
-                GameObject.FindGameObjectWithTag("Player");
+            return;
+        }
 
+        string json =
+            File.ReadAllText(saveLocation);
+
+        SaveData saveData =
+            JsonUtility.FromJson<SaveData>(json);      
+
+        GameObject player =
+            GameObject.FindGameObjectWithTag("Player");
+
+        if (player != null)
+        {
             player.transform.position =
                 saveData.playerPosition;
+        }
 
-            // Load dirt
-            foreach (Vector3 position in saveData.dirtPositions)
+
+            if (saveData.dirtData != null)
+        {
+            int highestDirtID = -1;
+
+            foreach (DirtSaveData data in saveData.dirtData)
             {
-                Instantiate(
+                GameObject newDirt = Instantiate(
                     dirtPrefab,
-                    position,
+                    data.position,
                     Quaternion.identity
                 );
+
+                Dirt dirt = newDirt.GetComponent<Dirt>();
+
+                if (dirt != null)
+                {
+                    dirt.SetID(data.dirtID);
+                    dirt.isWatered = data.isWatered;
+                    dirt.hasSeed = data.hasSeed;
+
+                    if (data.dirtID > highestDirtID)
+                        highestDirtID = data.dirtID;
+                }
+                else
+                {
+                    Debug.LogError("Loaded dirt prefab does not have a Dirt component!");
+                }
             }
 
-            // Load inventory
+            Hoe.SetNextDirtID(highestDirtID + 1);
+        }
+        
+
+        if (saveData.inventorySaveData != null)
+        {
             inventoryController.SetInventoryItems(
                 saveData.inventorySaveData
             );
+        }
 
-            // Load hotbar
+
+        if (saveData.hotbarSaveData != null)
+        {
             hotbarController.SetHotbarItems(
                 saveData.hotbarSaveData
             );
-
-            Debug.Log("Game loaded!");
         }
-        else
+
+        Debug.Log("Game loaded!");
+    }
+
+    private Dirt FindDirtByID(int id)
+    {
+        Dirt[] allDirt =
+            FindObjectsByType<Dirt>(
+                FindObjectsSortMode.None
+            );
+
+        foreach (Dirt dirt in allDirt)
         {
-            Debug.Log("No save file found. Creating new save.");
-
-            SaveGame();
+            if (dirt.GetID() == id)
+            {
+                return dirt;
+            }
         }
+
+        return null;
     }
 }
 

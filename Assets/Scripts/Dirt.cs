@@ -1,14 +1,22 @@
+
 using UnityEngine;
 
-
-
 public class Dirt : MonoBehaviour
-{  public int ID;
-   public bool isWatered;
-   public bool hasSeed;
+{
+    [Header("Save Data")]
+    [SerializeField] private int ID;
 
+    public bool isWatered;
+    public bool hasSeed;
 
+    public int GetID()
+    {
+        return ID;
+    }
 
-   
+    public void SetID(int id)
+    {
+        ID = id;
+    }
 }
 

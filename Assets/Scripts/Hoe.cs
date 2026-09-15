@@ -4,6 +4,13 @@ public class Hoe : Tool
 {
     public GameObject dirtPrefab;
 
+    private static int nextDirtID = 0;
+
+    public static void SetNextDirtID(int nextID)
+    {
+        nextDirtID = nextID;
+    }
+
     public override void UseItem()
     {
         PlaceDirt();
@@ -22,10 +29,25 @@ public class Hoe : Tool
 
         Vector2 positionUnderPlayer = playerTransform.position;
 
-        Instantiate(
+        GameObject newDirt = Instantiate(
             dirtPrefab,
             positionUnderPlayer,
             Quaternion.identity
         );
+
+        Dirt dirt = newDirt.GetComponent<Dirt>();
+
+        if (dirt != null)
+        {
+            dirt.SetID(nextDirtID);
+
+            Debug.Log("Created dirt with ID: " + dirt.GetID());
+
+            nextDirtID++;
+        }
+        else
+        {
+            Debug.LogError("The dirtPrefab does not have a Dirt component!");
+        }
     }
 }

@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 6021464802234697172}
   - component: {fileID: 6733158292592508182}
   - component: {fileID: 4748588063832664930}
+  - component: {fileID: 7742856631969003594}
   m_Layer: 0
   m_Name: Dirt
   m_TagString: Dirt
@@ -138,3 +139,18 @@ BoxCollider2D:
   m_AutoTiling: 1
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 3
+--- !u!114 &7742856631969003594
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1755344329039652326}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b87491eee05f63c40b50434fc199cc88, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Dirt
+  ID: 0
+  isWatered: 0
+  hasSeed: 0
