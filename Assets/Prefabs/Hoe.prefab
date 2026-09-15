@@ -13,13 +13,12 @@ GameObject:
   - component: {fileID: 6839377233557828042}
   - component: {fileID: -7101354051661546104}
   - component: {fileID: -6116856825070965526}
-  - component: {fileID: -656066662786609237}
   - component: {fileID: -4253762749250758944}
   - component: {fileID: 5634488426056634185}
   - component: {fileID: 140955349033557909}
   m_Layer: 5
   m_Name: Hoe
-  m_TagString: Hoe
+  m_TagString: Item
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -107,20 +106,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ItemDragHandler
   minDropDistance: 2
   maxDropDistance: 3
---- !u!114 &-656066662786609237
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4035822355791157628}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 69ce9b315d763d74da4c84d73f74da6b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: '::'
-  ID: 2
-  Name: 
 --- !u!212 &-4253762749250758944
 SpriteRenderer:
   serializedVersion: 2
@@ -228,6 +213,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36dfb2bb911236043b865ffdd273f864, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  hotbarPanel: {fileID: 0}
+  ID: 0
+  Name: 
+  useCooldown: 0.5
   dirtPrefab: {fileID: 1755344329039652326, guid: 0b0d46a5c5b05ce46a8ccc3cda7228a0, type: 3}
-  hoePrefab: {fileID: 0}

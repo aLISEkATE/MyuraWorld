@@ -9,7 +9,7 @@ public class InventoryController : MonoBehaviour
     public int slotCount;
     public GameObject[] itemPrefabs;
 
-    void Start()
+    void Awake()
     {   
         itemDictionary = FindFirstObjectByType<ItemDictionary>(); 
     }

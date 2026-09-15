@@ -6,6 +6,8 @@ using System.Collections;
 public class SaveData
 {
     public Vector3 playerPosition;
+    public List<Vector3> dirtPositions;
+    public List<Vector3> dirtSaveData;
     public List<InventorySaveData> inventorySaveData;
     public List<InventorySaveData> hotbarSaveData;
 }
