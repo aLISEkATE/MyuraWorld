@@ -5,6 +5,8 @@ TagManager:
   serializedVersion: 3
   tags:
   - Item
+  - Hoe
+  - Dirt
   layers:
   - Default
   - TransparentFX

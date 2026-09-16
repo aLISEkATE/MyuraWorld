@@ -18,5 +18,11 @@ public class Dirt : MonoBehaviour
     {
         ID = id;
     }
+
+      public void Water()
+    {
+        isWatered = true;
+        Debug.Log("Dirt watered!");
+    }
 }
 

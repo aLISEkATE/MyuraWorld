@@ -2,9 +2,11 @@ using UnityEngine;
 
 public class Hoe : Tool
 {
+    [Header("Dirt Settings")]
     public GameObject dirtPrefab;
 
-    [SerializeField] private float gridSize = 1f;
+    [SerializeField]
+    private float gridSize = 1f;
 
     private static int nextDirtID = 0;
 
@@ -20,12 +22,19 @@ public class Hoe : Tool
 
     private void PlaceDirt()
     {
+        // Find the player
         Transform playerTransform =
             GameObject.FindGameObjectWithTag("Player")?.transform;
 
-        if (dirtPrefab == null || playerTransform == null)
+        if (dirtPrefab == null)
         {
-            Debug.LogError("Assign dirtPrefab and tag the player as Player.");
+            Debug.LogError("Assign a dirtPrefab to the Hoe.");
+            return;
+        }
+
+        if (playerTransform == null)
+        {
+            Debug.LogError("No GameObject with the Player tag was found.");
             return;
         }
 
@@ -35,42 +44,42 @@ public class Hoe : Tool
             Mathf.Round(playerTransform.position.y / gridSize) * gridSize
         );
 
-        // Check if something is already occupying this grid cell
-        Collider2D existingCollider = Physics2D.OverlapBox(
-            snappedPosition,
-            new Vector2(gridSize, gridSize),
-            0f
+        // Check if a dirt tile already exists at this grid cell
+        Dirt[] existingDirt = FindObjectsByType<Dirt>(
+            FindObjectsSortMode.None
         );
 
-        if (existingCollider != null)
+        foreach (Dirt dirt in existingDirt)
         {
-            // Only prevent placement if the collider belongs to dirt
-            Dirt existingDirt = existingCollider.GetComponent<Dirt>();
+            Vector2 dirtPosition = dirt.transform.position;
 
-            if (existingDirt != null)
+            // Compare the dirt's grid position with the position
+            // where we are trying to place new dirt.
+            if (Vector2.Distance(dirtPosition, snappedPosition) < 0.01f)
             {
-                Debug.Log("There is already dirt here!");
+                Debug.Log("There is already dirt on this grid cell!");
                 return;
             }
         }
 
-        // Create the dirt at the snapped position
+        // No dirt exists here, so create it
         GameObject newDirt = Instantiate(
             dirtPrefab,
             snappedPosition,
             Quaternion.identity
         );
 
-        Dirt dirt = newDirt.GetComponent<Dirt>();
+        // Get the Dirt component
+        Dirt newDirtComponent = newDirt.GetComponent<Dirt>();
 
-        if (dirt != null)
+        if (newDirtComponent != null)
         {
-            dirt.SetID(nextDirtID);
+            newDirtComponent.SetID(nextDirtID);
 
             Debug.Log(
                 "Created dirt with ID: " +
-                dirt.GetID() +
-                " at " +
+                newDirtComponent.GetID() +
+                " at grid position: " +
                 snappedPosition
             );
 
