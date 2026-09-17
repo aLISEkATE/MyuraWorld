@@ -8,7 +8,7 @@ public class Dirt : MonoBehaviour
 
     public bool isWatered;
     public bool hasSeed;
-
+    public int seedID;
     public int GetID()
     {
         return ID;
@@ -23,6 +23,13 @@ public class Dirt : MonoBehaviour
     {
         isWatered = true;
         Debug.Log("Dirt watered!");
+    }
+
+          public void Plant()
+    {
+        hasSeed = true;
+
+        Debug.Log("Seed Planted!");
     }
 }
 

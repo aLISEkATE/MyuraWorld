@@ -42,7 +42,7 @@ public class HotbarController : MonoBehaviour
                 {
                     currentSlotNumber = i;
 
-                    Debug.Log("Current slot - " + i+1);
+                    Debug.Log("Current slot - " + i);
                 }
             }
 

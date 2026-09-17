@@ -10,4 +10,6 @@ public class DirtSaveData
     public bool isWatered;
 
     public bool hasSeed;
+
+    public int seedID;
 }

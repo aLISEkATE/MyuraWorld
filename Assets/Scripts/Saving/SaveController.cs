@@ -152,6 +152,7 @@ Debug.Log(
                     dirt.SetID(data.dirtID);
                     dirt.isWatered = data.isWatered;
                     dirt.hasSeed = data.hasSeed;
+                    dirt.seedID = data.seedID;
 
                     if (data.dirtID > highestDirtID)
                         highestDirtID = data.dirtID;
