@@ -1,22 +1,30 @@
-
 using UnityEngine;
 
-public class Seed : Tool
+public class Shovel : Tool
 {
-    [Header("Seed Settings")]
+    [Header("Dirt Settings")]
+    public GameObject dirtPrefab;
+
     [SerializeField]
     private float gridSize = 1f;
 
+   
     public override void UseItem()
     {
-        Plant();
+        RemoveDirt();
     }
 
-    private void Plant()
+    private void RemoveDirt()
     {
         // Find the player
         Transform playerTransform =
             GameObject.FindGameObjectWithTag("Player")?.transform;
+
+        if (dirtPrefab == null)
+        {
+            Debug.LogError("Assign a dirtPrefab to the Hoe.");
+            return;
+        }
 
         if (playerTransform == null)
         {
@@ -24,31 +32,31 @@ public class Seed : Tool
             return;
         }
 
-        // Snap player's position to the grid
+        // Snap the player's position to the grid
         Vector2 snappedPosition = new Vector2(
             Mathf.Round(playerTransform.position.x / gridSize) * gridSize,
             Mathf.Round(playerTransform.position.y / gridSize) * gridSize
         );
 
-        // Find all existing dirt
+        // Check if a dirt tile already exists at this grid cell
         Dirt[] existingDirt = FindObjectsByType<Dirt>(
             FindObjectsSortMode.None
         );
 
-        // Look for dirt in this grid cell
         foreach (Dirt dirt in existingDirt)
         {
             Vector2 dirtPosition = dirt.transform.position;
 
+            // Compare the dirt's grid position with the position
+            // where we are trying to place new dirt.
             if (Vector2.Distance(dirtPosition, snappedPosition) < 0.01f)
             {
-                // Plant in the dirt
-                dirt.Plant(ID);
-                Debug.Log("Seed planted ID -" + ID );
+                Destroy(dirt.gameObject);
+                Debug.Log("Dirt removed.");
                 return;
             }
         }
-
-        Debug.Log("No dirt found at this grid position.");
     }
 }
+
+

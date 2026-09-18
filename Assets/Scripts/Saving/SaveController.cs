@@ -63,6 +63,7 @@ foreach (GameObject dirtObject in dirtObjects)
         data.position = dirt.transform.position;
         data.isWatered = dirt.isWatered;
         data.hasSeed = dirt.hasSeed;
+        data.seedID = dirt.seedID;
 
         dirtData.Add(data);
     }
