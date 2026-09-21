@@ -70,7 +70,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 1254234445, guid: 9f10163048f1c1448a99fa524b6b8c04, type: 3}
+  m_Sprite: {fileID: 1422254207, guid: 9f10163048f1c1448a99fa524b6b8c04, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -155,7 +155,7 @@ SpriteRenderer:
   m_SortingLayer: 4
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 1254234445, guid: 9f10163048f1c1448a99fa524b6b8c04, type: 3}
+  m_Sprite: {fileID: 1422254207, guid: 9f10163048f1c1448a99fa524b6b8c04, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -213,7 +213,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c429560c632d9ad48b5cfc235ecac07e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Shovel
-  ID: 0
+  ID: 7
   Name: Shovel
   dirtPrefab: {fileID: 1755344329039652326, guid: 0b0d46a5c5b05ce46a8ccc3cda7228a0, type: 3}
   gridSize: 1

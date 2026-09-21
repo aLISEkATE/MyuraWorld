@@ -51,6 +51,7 @@ public class Shovel : Tool
             // where we are trying to place new dirt.
             if (Vector2.Distance(dirtPosition, snappedPosition) < 0.01f)
             {
+
                 Destroy(dirt.gameObject);
                 Debug.Log("Dirt removed.");
                 return;
