@@ -1,4 +1,5 @@
 
+using NUnit.Framework;
 using UnityEngine;
 
 public class Dirt : MonoBehaviour
@@ -9,8 +10,6 @@ public class Dirt : MonoBehaviour
     public bool isWatered;
     public bool hasSeed;
     public int seedID;
-    //public Seed currentSeed;
-
     public int GetID()
     {
         return ID;
@@ -21,7 +20,22 @@ public class Dirt : MonoBehaviour
         ID = id;
     }
 
-      public void Water()
+   private void OnEnable()
+   {
+      TimeManager.onDayChanged += Dry;
+   }
+
+   private void OnDisable()
+   {
+      TimeManager.onDayChanged -= Dry;
+   }
+
+   private void Dry()
+   {
+      isWatered = false;
+      Debug.Log("Dirt dried out!");
+   } 
+     public void Water()
     {
         isWatered = true;
         Debug.Log("Dirt watered!");

@@ -34,52 +34,52 @@ public class SaveController : MonoBehaviour
         GameObject player =
             GameObject.FindGameObjectWithTag("Player");
 
-     GameObject[] dirtObjects =
-    GameObject.FindGameObjectsWithTag("Dirt");
+        GameObject[] dirtObjects =
+           GameObject.FindGameObjectsWithTag("Dirt");
 
-Debug.Log("Found " + dirtObjects.Length + " dirt objects.");
+        Debug.Log("Found " + dirtObjects.Length + " dirt objects.");
 
-List<DirtSaveData> dirtData =
-    new List<DirtSaveData>();
+        List<DirtSaveData> dirtData =
+            new List<DirtSaveData>();
 
-foreach (GameObject dirtObject in dirtObjects)
-{
-    Debug.Log("Checking dirt object: " + dirtObject.name);
+                foreach (GameObject dirtObject in dirtObjects)
+                {
+                    Debug.Log("Checking dirt object: " + dirtObject.name);
 
-    Dirt dirt =
-        dirtObject.GetComponent<Dirt>();
+                    Dirt dirt =
+                        dirtObject.GetComponent<Dirt>();
 
-    if (dirt != null)
-    {
+                        if (dirt != null)
+                        {
+                            Debug.Log(
+                                "Saving Dirt ID: " +
+                                dirt.GetID()
+                            );
+
+                            DirtSaveData data =
+                                new DirtSaveData();
+
+                            data.dirtID = dirt.GetID();
+                            data.position = dirt.transform.position;
+                            data.isWatered = dirt.isWatered;
+                            data.hasSeed = dirt.hasSeed;
+                            data.seedID = dirt.seedID;
+
+                            dirtData.Add(data);
+                        }
+                        else
+                        {
+                            Debug.LogWarning(
+                                dirtObject.name +
+                                " has the Dirt tag but no Dirt component!"
+                            );
+                        }
+                }
+
         Debug.Log(
-            "Saving Dirt ID: " +
-            dirt.GetID()
+            "Total dirt saved: " +
+            dirtData.Count
         );
-
-        DirtSaveData data =
-            new DirtSaveData();
-
-        data.dirtID = dirt.GetID();
-        data.position = dirt.transform.position;
-        data.isWatered = dirt.isWatered;
-        data.hasSeed = dirt.hasSeed;
-        data.seedID = dirt.seedID;
-
-        dirtData.Add(data);
-    }
-    else
-    {
-        Debug.LogWarning(
-            dirtObject.name +
-            " has the Dirt tag but no Dirt component!"
-        );
-    }
-}
-
-Debug.Log(
-    "Total dirt saved: " +
-    dirtData.Count
-);
 
         // Create SaveData
         SaveData saveData =
@@ -135,7 +135,7 @@ Debug.Log(
 
 
             if (saveData.dirtData != null)
-        {
+            {
             int highestDirtID = -1;
 
             foreach (DirtSaveData data in saveData.dirtData)
@@ -165,7 +165,8 @@ Debug.Log(
             }
 
             Hoe.SetNextDirtID(highestDirtID + 1);
-        }
+            
+            }
         
 
         if (saveData.inventorySaveData != null)

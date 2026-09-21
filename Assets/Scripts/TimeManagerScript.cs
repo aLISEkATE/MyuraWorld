@@ -3,7 +3,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 
 public class TimeManager : MonoBehaviour
-{   
+{   [SerializeField] GameObject GameController;
     public static Action onMinuteChanged;
     public static Action onHourChanged;
     public static Action onDayChanged;
@@ -45,8 +45,8 @@ public class TimeManager : MonoBehaviour
                 onDayChanged?.Invoke();
                 Hour = 0;
                 Minute = 0;  
+                GameController.GetComponent<SaveController>().SaveGame();
             }
-
             timer = MinuteToRealTime;
         }
     }

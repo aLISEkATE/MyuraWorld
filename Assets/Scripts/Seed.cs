@@ -11,8 +11,7 @@ public class Seed : Tool
     {
         Plant();
     }
-
-    private void Plant()
+        private void Plant()
     {
         // Find the player
         Transform playerTransform =
@@ -24,31 +23,39 @@ public class Seed : Tool
             return;
         }
 
-        // Snap player's position to the grid
+        // Snap the player's position to the grid
         Vector2 snappedPosition = new Vector2(
             Mathf.Round(playerTransform.position.x / gridSize) * gridSize,
             Mathf.Round(playerTransform.position.y / gridSize) * gridSize
         );
 
-        // Find all existing dirt
+        // Check if a dirt tile already exists at this grid cell
         Dirt[] existingDirt = FindObjectsByType<Dirt>(
             FindObjectsSortMode.None
         );
 
-        // Look for dirt in this grid cell
         foreach (Dirt dirt in existingDirt)
         {
-            Vector2 dirtPosition = dirt.transform.position;
+             Vector2 dirtPosition = dirt.transform.position;
 
             if (Vector2.Distance(dirtPosition, snappedPosition) < 0.01f)
             {
-                // Plant in the dirt
+                
+               if ( dirt.hasSeed == true)
+            {
+                Debug.Log("There is already a seed in this dirt!");
+                return;
+            } 
                 dirt.Plant(ID);
                 Debug.Log("Seed planted ID -" + ID );
                 return;
             }
+           
         }
-
-        Debug.Log("No dirt found at this grid position.");
+        
     }
+
 }
+    
+
+   
