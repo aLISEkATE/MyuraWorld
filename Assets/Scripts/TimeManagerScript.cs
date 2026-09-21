@@ -2,7 +2,7 @@ using System;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class TimeManagerScript : MonoBehaviour
+public class TimeManager : MonoBehaviour
 {   
     public static Action onMinuteChanged;
     public static Action onHourChanged;
@@ -12,7 +12,7 @@ public class TimeManagerScript : MonoBehaviour
     public static int Hour { get; private set; }
     public static int Day { get; private set; }
 
-    private float MinuteToRealTime = 1f;
+    private float MinuteToRealTime = 0.001f;
     private float timer;
     void Start()
     {

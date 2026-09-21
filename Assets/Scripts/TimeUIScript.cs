@@ -1,16 +1,30 @@
 using UnityEngine;
-
+using TMPro;
+using System;
 public class TimeUIScript : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public TextMeshProUGUI timeText;
+    public TextMeshProUGUI dayText;
+
+
+    private void OnEnable()
     {
-        
+        TimeManager.onMinuteChanged  += UpdateTime;
+        TimeManager.onHourChanged  += UpdateTime;
+        TimeManager.onDayChanged  += UpdateTime;
+
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnDisable()
     {
-        
+        TimeManager.onMinuteChanged  -= UpdateTime;
+        TimeManager.onHourChanged  -= UpdateTime;
+        TimeManager.onDayChanged  -= UpdateTime;
+    }
+
+    private void UpdateTime()
+    {
+        timeText.text = $"{TimeManager.Hour:00}:{TimeManager.Minute:00}";
+        dayText.text = $"Day {TimeManager.Day}";
     }
 }
