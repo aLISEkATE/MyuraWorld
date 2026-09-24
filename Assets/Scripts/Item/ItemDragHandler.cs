@@ -102,6 +102,7 @@ public class ItemDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         Debug.Log((Vector2)playerTransform.position + dropOffset);
         Instantiate(gameObject, dropPosition, Quaternion.identity);
         Destroy(gameObject);
+        // InventoryController.inventoryItems.Remove(gamedObject);
     }
 }
  

@@ -1,4 +1,5 @@
 
+using NUnit.Framework;
 using UnityEngine;
 
 public class Seed : Tool
@@ -7,6 +8,11 @@ public class Seed : Tool
     [SerializeField]
     private float gridSize = 1f;
 
+    [Header("Growth Settings")]
+    [SerializeField] private int growthDays = 3;
+    private int plantedDay;
+    private int daysPassed;
+    public bool isGrown;
     public override void UseItem()
     {
         Plant();
@@ -46,7 +52,7 @@ public class Seed : Tool
                 Debug.Log("There is already a seed in this dirt!");
                 return;
             } 
-                dirt.Plant(ID);
+                dirt.Plant(ID, growthDays);
                 Debug.Log("Seed planted ID -" + ID );
                 return;
             }
@@ -54,8 +60,36 @@ public class Seed : Tool
         }
         
     }
+      public void SetPlantedDay()
+    {
+        plantedDay = TimeManager.Day;
+        isGrown = false;
 
-}
-    
+        Debug.Log("Seed planted on day " + plantedDay);
+    }
+        private void OnEnable()
+    {
+        TimeManager.onDayChanged += CheckGrowth;
+    }
+
+    private void OnDisable()
+    {
+        TimeManager.onDayChanged -= CheckGrowth;
+    }
+
+    private void CheckGrowth()
+    {
+        daysPassed = TimeManager.Day - plantedDay;
+
+        if (daysPassed >= growthDays)
+        {
+            isGrown = true;
+            
+            Debug.Log("Seed has grown!");
+        }
+    }
+        
+    }
+  
 
    

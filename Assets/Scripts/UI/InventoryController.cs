@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class InventoryController : MonoBehaviour
@@ -9,6 +10,9 @@ public class InventoryController : MonoBehaviour
     public int slotCount;
     public GameObject[] itemPrefabs;
     public GameObject[] seedPrefabs;
+
+    public static List<GameObject> inventoryItems = new List<GameObject>();
+
 
     void Awake()
     {   
@@ -71,6 +75,8 @@ public class InventoryController : MonoBehaviour
                     GameObject item = Instantiate(itemPrefab, slot.transform);
                     item.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
                     slot.currentItem = item;
+                    // inventoryItems.Add(item);
+    
                 }
             }
         }
