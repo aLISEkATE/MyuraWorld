@@ -1,0 +1,25 @@
+using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class RecipeItemUI : MonoBehaviour
+{
+    public Image icon;
+    public TextMeshProUGUI amount;
+
+    public void Setup(RecipeIngredient ingredient, int inventoryAmount)
+    {
+        icon.sprite = ingredient.icon;
+
+        amount.text = ingredient.amount;
+
+        if (inventoryAmount < ingredient.amount)
+        {
+            amount.color = Color.red;
+        }
+        else
+        {
+            amount.color = Color.white;
+        }
+    }
+}
