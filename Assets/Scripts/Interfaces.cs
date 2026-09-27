@@ -1,9 +1,6 @@
 using System;
 using UnityEngine;
-public interface IStore
-{
-    
-}
+
 public interface IPlace
 {
    

@@ -1,21 +1,94 @@
-using System.Runtime.CompilerServices;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
-public class CraftingScript : MonoBehaviour
+public class CraftingScript : MonoBehaviour, IPointerClickHandler
 {
     public GameObject inventoryPanel;
-    public Recipe recipe;
 
-    public void CheckInventory()
+    private Recipe[] recipes;
+
+    private void Awake()
     {
-        // Check every ingredient required by the recipe
+        recipes = GetComponentsInChildren<Recipe>(true);
+
+        Debug.Log("Found " + recipes.Length + " recipes.");
+
+        if (inventoryPanel == null)
+        {
+            Debug.LogError("CraftingScript: Inventory Panel is not assigned!", this);
+        }
+    }
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        if (eventData.button != PointerEventData.InputButton.Left)
+            return;
+
+        // Find which Recipe was clicked
+        Recipe clickedRecipe = eventData.pointerPress != null
+            ? eventData.pointerPress.GetComponent<Recipe>()
+            : null;
+
+        if (clickedRecipe == null)
+        {
+            clickedRecipe = eventData.pointerEnter != null
+                ? eventData.pointerEnter.GetComponentInParent<Recipe>()
+                : null;
+        }
+
+        if (clickedRecipe == null)
+        {
+            Debug.LogWarning("Clicked object is not a Recipe.", this);
+            return;
+        }
+
+        if (CheckInventory(clickedRecipe))
+        {
+            Craft(clickedRecipe);
+        }
+    }
+
+    public bool CheckInventory(Recipe recipe)
+    {
+        if (recipe == null)
+        {
+            Debug.LogError("CheckInventory: Recipe is null!");
+            return false;
+        }
+
+        if (recipe.input == null)
+        {
+            Debug.LogError("CheckInventory: Recipe input is null!", recipe);
+            return false;
+        }
+
+        if (inventoryPanel == null)
+        {
+            Debug.LogError("CheckInventory: Inventory Panel is null!", this);
+            return false;
+        }
+
         foreach (ItemTypeAndCount required in recipe.input)
         {
+            if (required == null)
+            {
+                Debug.LogError("Recipe contains a null ingredient!", recipe);
+                return false;
+            }
+
+            if (required.item == null)
+            {
+                Debug.LogError("Recipe ingredient has no Item assigned!", recipe);
+                return false;
+            }
+
             int amountFound = 0;
 
-            // Look through every inventory slot
             foreach (Transform slotTransform in inventoryPanel.transform)
             {
+                if (slotTransform == null)
+                    continue;
+
                 Slot slot = slotTransform.GetComponent<Slot>();
 
                 if (slot == null || slot.currentItem == null)
@@ -26,64 +99,172 @@ public class CraftingScript : MonoBehaviour
                 if (item == null)
                     continue;
 
-                // Is this the item we're looking for?
-                if (item == required.item)
+                if (item.ID == required.item.ID)
                 {
                     amountFound += item.quantity;
                 }
             }
 
-            // Not enough of this ingredient
             if (amountFound < required.count)
             {
-                Debug.Log(
-                    "Not enough " + required.item.Name +
-                    ". Required: " + required.count +
-                    ", Found: " + amountFound
-                );
+                return false;
+            }
+        }
 
+        return true;
+    }
+
+    private void Craft(Recipe recipe)
+    {
+        if (recipe == null)
+        {
+            Debug.LogError("Craft: Recipe is null!");
+            return;
+        }
+
+        Debug.Log("Crafting: " + recipe.recipeName);
+
+        if (recipe.input != null)
+        {
+            // Remove ingredients
+            foreach (ItemTypeAndCount required in recipe.input)
+            {
+                if (required == null || required.item == null)
+                    continue;
+
+                RemoveItem(required.item.ID, required.count);
+            }
+        }
+
+        if (recipe.output != null)
+        {
+            // Add crafted items
+            foreach (ItemTypeAndCount output in recipe.output)
+            {
+                if (output == null || output.item == null)
+                    continue;
+
+                AddItem(output.item, output.count);
+            }
+        }
+    }
+
+    private void RemoveItem(int itemID, int amount)
+    {
+        if (inventoryPanel == null)
+        {
+            Debug.LogError("RemoveItem: Inventory Panel is null!", this);
+            return;
+        }
+
+        if (amount <= 0)
+            return;
+
+        foreach (Transform slotTransform in inventoryPanel.transform)
+        {
+            if (slotTransform == null)
+                continue;
+
+            Slot slot = slotTransform.GetComponent<Slot>();
+
+            if (slot == null || slot.currentItem == null)
+                continue;
+
+            Item item = slot.currentItem.GetComponent<Item>();
+
+            if (item == null || item.ID != itemID)
+                continue;
+
+            int removed = item.RemoveFromStack(amount);
+            amount -= removed;
+
+            if (item.quantity <= 0)
+            {
+                Destroy(slot.currentItem);
+                slot.currentItem = null;
+            }
+
+            if (amount <= 0)
+                return;
+        }
+
+        Debug.LogWarning(
+            "RemoveItem: Could not remove the full amount of item ID " + itemID
+        );
+    }
+
+    private void AddItem(Item itemPrefab, int amount)
+    {
+        if (inventoryPanel == null)
+        {
+            Debug.LogError("AddItem: Inventory Panel is null!", this);
+            return;
+        }
+
+        if (itemPrefab == null)
+        {
+            Debug.LogError("AddItem: Item prefab is null!");
+            return;
+        }
+
+        if (amount <= 0)
+            return;
+
+        // First try to find an existing stack
+        foreach (Transform slotTransform in inventoryPanel.transform)
+        {
+            if (slotTransform == null)
+                continue;
+
+            Slot slot = slotTransform.GetComponent<Slot>();
+
+            if (slot == null || slot.currentItem == null)
+                continue;
+
+            Item existingItem = slot.currentItem.GetComponent<Item>();
+
+            if (existingItem == null)
+                continue;
+
+            if (existingItem.ID == itemPrefab.ID)
+            {
+                existingItem.AddToStack(amount);
                 return;
             }
         }
 
-        // If we reached this point, every ingredient is available
-        Debug.Log("All ingredients available!");
+        foreach (Transform slotTransform in inventoryPanel.transform)
+        {
+            if (slotTransform == null)
+                continue;
 
-        Craft();
-    }
+            Slot slot = slotTransform.GetComponent<Slot>();
 
-    private void Craft()
-    {
-        Debug.Log("Crafting " + recipe.recipeName);
+            if (slot == null || slot.currentItem != null)
+                continue;
 
-        // We'll remove the ingredients and add the output here.
+            GameObject newItem = itemPrefab.CloneItem(amount, slotTransform);
+
+
+            if (newItem == null)
+            {
+                Debug.LogError("AddItem: Failed to clone item!", this);
+                return;
+            }
+
+            RectTransform itemRect = newItem.GetComponent<RectTransform>();
+
+            if (itemRect != null)
+            {
+                itemRect.anchoredPosition = Vector2.zero;
+                itemRect.localRotation = Quaternion.identity;
+            }
+
+            slot.currentItem = newItem;
+            return;
+               
+        }
     }
 }
-    //get component gameobject recipe content
-    //public bool HasEnough()
-   // {
-       // if GameObject(list) from InventoryController inventoryItems has equal or more of Recipe (public) ItemTypeAndCount input;
-       //return true
-       //else false
-    //}
-    //tracks which items are listed in recipe input
-    //displays t}hem in recipe content window but only shows the icon(if thats somehow possible)
-    //count is generated from recipe item(count)
-    //
-    // private showRecipeItems(){}
-    //recipe contend is hidden my default
-    //when user hovers over recipe
-    //show recipe
-    
-    //private NotEnoughItems(){}
-    //if inventory item count < input count
-    //gameobject get component text mesh pro named Amount
-    // red -> input count
-    //display get component<gameobject> recipe content
-    
-    //private UseRecipe(){}
-    //when user lmb clicks on recipe
-    //if inventory item count >= input count
-    //CraftingScript.craft();
-    //else return;
+
 

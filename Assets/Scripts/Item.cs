@@ -1,7 +1,7 @@
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
-
+using UnityEngine.UI;
 
 
 public class Item : MonoBehaviour
@@ -9,6 +9,15 @@ public class Item : MonoBehaviour
    public int ID;
    public string Name;
    public int quantity = 1;
+   public Sprite GetIcon()
+   {
+        Image image = GetComponent<Image>();
+
+        if (image != null)
+            return image.sprite;
+
+        return null;
+   }
 
    private TMP_Text quantityText;
     private void Awake()
