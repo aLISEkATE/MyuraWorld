@@ -3,19 +3,32 @@ using UnityEngine.EventSystems;
 
 public class CraftingScript : MonoBehaviour, IPointerClickHandler
 {
-    public GameObject inventoryPanel;
+    [Header("Inventory")]
+    [SerializeField] private GameObject inventoryPanel;
+
+    [Header("Recipe UI")]
+    [SerializeField] private RecipeItemUI recipeItemPrefab;
 
     private Recipe[] recipes;
 
-    private void Awake()
+    private void Start()
     {
+       
         recipes = GetComponentsInChildren<Recipe>(true);
-
         Debug.Log("Found " + recipes.Length + " recipes.");
 
         if (inventoryPanel == null)
-        {
             Debug.LogError("CraftingScript: Inventory Panel is not assigned!", this);
+
+        if (recipeItemPrefab == null)
+            Debug.LogError("CraftingScript: Recipe Item UI prefab is not assigned!", this);
+
+       
+        RecipeUI[] recipeUIs = GetComponentsInChildren<RecipeUI>(true);
+
+        foreach (RecipeUI recipeUI in recipeUIs)
+        {
+            recipeUI.Initialize(recipeItemPrefab, this);
         }
     }
 
@@ -24,16 +37,17 @@ public class CraftingScript : MonoBehaviour, IPointerClickHandler
         if (eventData.button != PointerEventData.InputButton.Left)
             return;
 
-        // Find which Recipe was clicked
-        Recipe clickedRecipe = eventData.pointerPress != null
-            ? eventData.pointerPress.GetComponent<Recipe>()
-            : null;
+        Recipe clickedRecipe = null;
 
-        if (clickedRecipe == null)
+        if (eventData.pointerPress != null)
         {
-            clickedRecipe = eventData.pointerEnter != null
-                ? eventData.pointerEnter.GetComponentInParent<Recipe>()
-                : null;
+            clickedRecipe = eventData.pointerPress.GetComponent<Recipe>();
+        }
+
+        if (clickedRecipe == null && eventData.pointerEnter != null)
+        {
+            clickedRecipe =
+                eventData.pointerEnter.GetComponentInParent<Recipe>();
         }
 
         if (clickedRecipe == null)
@@ -48,6 +62,8 @@ public class CraftingScript : MonoBehaviour, IPointerClickHandler
         }
     }
 
+   
+
     public bool CheckInventory(Recipe recipe)
     {
         if (recipe == null)
@@ -58,52 +74,25 @@ public class CraftingScript : MonoBehaviour, IPointerClickHandler
 
         if (recipe.input == null)
         {
-            Debug.LogError("CheckInventory: Recipe input is null!", recipe);
-            return false;
-        }
-
-        if (inventoryPanel == null)
-        {
-            Debug.LogError("CheckInventory: Inventory Panel is null!", this);
+            Debug.LogError(
+                "CheckInventory: Recipe input is null!",
+                recipe
+            );
             return false;
         }
 
         foreach (ItemTypeAndCount required in recipe.input)
         {
-            if (required == null)
+            if (required == null || required.item == null)
             {
-                Debug.LogError("Recipe contains a null ingredient!", recipe);
+                Debug.LogError(
+                    "Recipe contains an invalid ingredient!",
+                    recipe
+                );
                 return false;
             }
 
-            if (required.item == null)
-            {
-                Debug.LogError("Recipe ingredient has no Item assigned!", recipe);
-                return false;
-            }
-
-            int amountFound = 0;
-
-            foreach (Transform slotTransform in inventoryPanel.transform)
-            {
-                if (slotTransform == null)
-                    continue;
-
-                Slot slot = slotTransform.GetComponent<Slot>();
-
-                if (slot == null || slot.currentItem == null)
-                    continue;
-
-                Item item = slot.currentItem.GetComponent<Item>();
-
-                if (item == null)
-                    continue;
-
-                if (item.ID == required.item.ID)
-                {
-                    amountFound += item.quantity;
-                }
-            }
+            int amountFound = GetInventoryAmount(required.item);
 
             if (amountFound < required.count)
             {
@@ -113,6 +102,41 @@ public class CraftingScript : MonoBehaviour, IPointerClickHandler
 
         return true;
     }
+
+
+    public int GetInventoryAmount(Item item)
+    {
+        if (item == null || inventoryPanel == null)
+            return 0;
+
+        int amountFound = 0;
+
+        foreach (Transform slotTransform in inventoryPanel.transform)
+        {
+            if (slotTransform == null)
+                continue;
+
+            Slot slot = slotTransform.GetComponent<Slot>();
+
+            if (slot == null || slot.currentItem == null)
+                continue;
+
+            Item inventoryItem =
+                slot.currentItem.GetComponent<Item>();
+
+            if (inventoryItem == null)
+                continue;
+
+            if (inventoryItem.ID == item.ID)
+            {
+                amountFound += inventoryItem.quantity;
+            }
+        }
+
+        return amountFound;
+    }
+
+ 
 
     private void Craft(Recipe recipe)
     {
@@ -124,36 +148,47 @@ public class CraftingScript : MonoBehaviour, IPointerClickHandler
 
         Debug.Log("Crafting: " + recipe.recipeName);
 
+        // Remove ingredients.
         if (recipe.input != null)
         {
-            // Remove ingredients
             foreach (ItemTypeAndCount required in recipe.input)
             {
                 if (required == null || required.item == null)
                     continue;
 
-                RemoveItem(required.item.ID, required.count);
+                RemoveItem(
+                    required.item.ID,
+                    required.count
+                );
             }
         }
 
+        // Add outputs.
         if (recipe.output != null)
         {
-            // Add crafted items
             foreach (ItemTypeAndCount output in recipe.output)
             {
                 if (output == null || output.item == null)
                     continue;
 
-                AddItem(output.item, output.count);
+                AddItem(
+                    output.item,
+                    output.count
+                );
             }
         }
     }
+
+
 
     private void RemoveItem(int itemID, int amount)
     {
         if (inventoryPanel == null)
         {
-            Debug.LogError("RemoveItem: Inventory Panel is null!", this);
+            Debug.LogError(
+                "RemoveItem: Inventory Panel is null!",
+                this
+            );
             return;
         }
 
@@ -170,12 +205,14 @@ public class CraftingScript : MonoBehaviour, IPointerClickHandler
             if (slot == null || slot.currentItem == null)
                 continue;
 
-            Item item = slot.currentItem.GetComponent<Item>();
+            Item item =
+                slot.currentItem.GetComponent<Item>();
 
             if (item == null || item.ID != itemID)
                 continue;
 
             int removed = item.RemoveFromStack(amount);
+
             amount -= removed;
 
             if (item.quantity <= 0)
@@ -189,15 +226,21 @@ public class CraftingScript : MonoBehaviour, IPointerClickHandler
         }
 
         Debug.LogWarning(
-            "RemoveItem: Could not remove the full amount of item ID " + itemID
+            "RemoveItem: Could not remove the full amount of item ID "
+            + itemID
         );
     }
+
+
 
     private void AddItem(Item itemPrefab, int amount)
     {
         if (inventoryPanel == null)
         {
-            Debug.LogError("AddItem: Inventory Panel is null!", this);
+            Debug.LogError(
+                "AddItem: Inventory Panel is null!",
+                this
+            );
             return;
         }
 
@@ -210,18 +253,20 @@ public class CraftingScript : MonoBehaviour, IPointerClickHandler
         if (amount <= 0)
             return;
 
-        // First try to find an existing stack
+        // First try to add to an existing stack.
         foreach (Transform slotTransform in inventoryPanel.transform)
         {
             if (slotTransform == null)
                 continue;
 
-            Slot slot = slotTransform.GetComponent<Slot>();
+            Slot slot =
+                slotTransform.GetComponent<Slot>();
 
             if (slot == null || slot.currentItem == null)
                 continue;
 
-            Item existingItem = slot.currentItem.GetComponent<Item>();
+            Item existingItem =
+                slot.currentItem.GetComponent<Item>();
 
             if (existingItem == null)
                 continue;
@@ -233,26 +278,35 @@ public class CraftingScript : MonoBehaviour, IPointerClickHandler
             }
         }
 
+        // Otherwise find an empty slot.
         foreach (Transform slotTransform in inventoryPanel.transform)
         {
             if (slotTransform == null)
                 continue;
 
-            Slot slot = slotTransform.GetComponent<Slot>();
+            Slot slot =
+                slotTransform.GetComponent<Slot>();
 
             if (slot == null || slot.currentItem != null)
                 continue;
 
-            GameObject newItem = itemPrefab.CloneItem(amount, slotTransform);
-
+            GameObject newItem =
+                itemPrefab.CloneItem(
+                    amount,
+                    slotTransform
+                );
 
             if (newItem == null)
             {
-                Debug.LogError("AddItem: Failed to clone item!", this);
+                Debug.LogError(
+                    "AddItem: Failed to clone item!",
+                    this
+                );
                 return;
             }
 
-            RectTransform itemRect = newItem.GetComponent<RectTransform>();
+            RectTransform itemRect =
+                newItem.GetComponent<RectTransform>();
 
             if (itemRect != null)
             {
@@ -262,9 +316,10 @@ public class CraftingScript : MonoBehaviour, IPointerClickHandler
 
             slot.currentItem = newItem;
             return;
-               
         }
+
+        Debug.LogWarning(
+            "AddItem: No empty inventory slot available."
+        );
     }
 }
-
-

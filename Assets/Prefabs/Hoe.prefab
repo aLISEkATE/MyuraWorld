@@ -214,6 +214,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   ID: 0
-  Name: 
-  useCooldown: 0.5
+  Name: Hoe
+  quantity: 1
   dirtPrefab: {fileID: 1755344329039652326, guid: 0b0d46a5c5b05ce46a8ccc3cda7228a0, type: 3}
+  gridSize: 1
