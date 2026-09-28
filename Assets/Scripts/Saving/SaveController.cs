@@ -6,6 +6,7 @@ public class SaveController : MonoBehaviour
 {   
     
     public GameObject dirtPrefab;
+    public GameObject placeablePrefab;
 
     private string saveLocation;
 
@@ -36,11 +37,16 @@ public class SaveController : MonoBehaviour
 
         GameObject[] dirtObjects =
            GameObject.FindGameObjectsWithTag("Dirt");
+        GameObject[] placeableObjects =
+           GameObject.FindGameObjectsWithTag("Placeable");
 
         Debug.Log("Found " + dirtObjects.Length + " dirt objects.");
+        Debug.Log("Found " + placeableObjects.Length + " placeable objects.");
 
         List<DirtSaveData> dirtData =
             new List<DirtSaveData>();
+        List<PlaceableSaveData> placeableData =
+            new List<PlaceableSaveData>();
 
                 foreach (GameObject dirtObject in dirtObjects)
                 {
@@ -64,6 +70,9 @@ public class SaveController : MonoBehaviour
                             data.isWatered = dirt.isWatered;
                             data.hasSeed = dirt.hasSeed;
                             data.seedID = dirt.seedID;
+                            data.daysPassed = dirt.daysPassed;
+                            data.growthDays = dirt.growthDays;
+                            data.isGrown = dirt.isGrown;
 
                             dirtData.Add(data);
                         }
@@ -80,6 +89,42 @@ public class SaveController : MonoBehaviour
             "Total dirt saved: " +
             dirtData.Count
         );
+            foreach (GameObject placeableObject in placeableObjects)
+                {
+                    Debug.Log("Checking placeable object: " + placeableObject.name);
+
+                    Placeable placeable =
+                        placeableObject.GetComponent<Placeable>();
+
+                        if (placeable != null)
+                        {
+                            Debug.Log(
+                                "Saving placable ID: " +
+                                placeable.GetID()
+                            );
+
+                            PlaceableSaveData data =
+                                new PlaceableSaveData();
+
+                            data.placeableID = placeable.GetID();
+                            data.position = placeable.transform.position;
+      
+
+                            placeableData.Add(data);
+                        }
+                        else
+                        {
+                            Debug.LogWarning(
+                                placeableObject.name +
+                                " has the Placeable tag but no Dirt component!"
+                            );
+                        }
+                }
+
+        Debug.Log(
+            "Total dirt saved: " +
+            placeableData.Count
+        );
 
         // Create SaveData
         SaveData saveData =
@@ -90,6 +135,9 @@ public class SaveController : MonoBehaviour
 
         saveData.dirtData =
             dirtData;
+
+        saveData.placeableData =
+            placeableData;
 
         saveData.inventorySaveData =
             inventoryController.GetInventoryItems();
@@ -154,7 +202,9 @@ public class SaveController : MonoBehaviour
                     dirt.isWatered = data.isWatered;
                     dirt.hasSeed = data.hasSeed;
                     dirt.seedID = data.seedID;
-
+                    dirt.daysPassed = data.daysPassed;
+                    dirt.growthDays = data.growthDays;
+                    dirt.isGrown = data.isGrown;
                     if (data.dirtID > highestDirtID)
                         highestDirtID = data.dirtID;
                 }
@@ -167,7 +217,38 @@ public class SaveController : MonoBehaviour
             Hoe.SetNextDirtID(highestDirtID + 1);
             
             }
-        
+
+         if (saveData.placeableData!= null)
+            {
+            int highestPlaceableID = -1;
+
+            foreach (PlaceableSaveData data in saveData.placeableData)
+            {
+                GameObject newPlaceable = Instantiate(
+                    placeablePrefab,
+                    data.position,
+                    Quaternion.identity
+                );
+
+                Placeable placeable = newPlaceable.GetComponent<Placeable>();
+
+                if (placeable != null)
+                {
+                    placeable.SetID(data.placeableID);
+                    placeable.transform.position = data.position;
+                   
+                    if (data.placeableID > highestPlaceableID)
+                        highestPlaceableID = data.placeableID;
+                }
+                else
+                {
+                    Debug.LogError("Loaded placeable prefab does not have a Dirt component!");
+                }
+            }
+
+            PlaceableItem.SetNextPlaceableID(highestPlaceableID + 1);
+            
+            }
 
         if (saveData.inventorySaveData != null)
         {
@@ -199,6 +280,23 @@ public class SaveController : MonoBehaviour
             if (dirt.GetID() == id)
             {
                 return dirt;
+            }
+        }
+
+        return null;
+    }
+    private Placeable FindPlaceableByID(int id)
+    {
+        Placeable[] allPlaceable =
+            FindObjectsByType<Placeable>(
+                FindObjectsSortMode.None
+            );
+
+        foreach (Placeable placeable in allPlaceable)
+        {
+            if (placeable.GetID() == id)
+            {
+                return placeable;
             }
         }
 
