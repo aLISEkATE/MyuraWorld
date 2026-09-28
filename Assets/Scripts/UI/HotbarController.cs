@@ -15,7 +15,7 @@ public class HotbarController : MonoBehaviour
 
     private Key[] hotbarKeys;
 
-   
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
     private void Awake()
     {
         itemDictionary = FindFirstObjectByType<ItemDictionary>();
@@ -27,65 +27,31 @@ public class HotbarController : MonoBehaviour
         }
     }
 
-       private int previousSlotNumber = -1; 
-
-private void Update()
-{
-    if (PauseController.IsGamePaused) return;
-       
-
-    for (int i = 0; i < slotCount; i++)
-    {
-        if (Keyboard.current[hotbarKeys[i]].wasPressedThisFrame)
+        // Update is called once per frame
+        private void Update()
         {
-            currentSlotNumber = i;
-            Debug.Log("Current slot - " + i);
+            if (PauseController.IsGamePaused)
+            {
+                 return;
+            }
+               
+            // Select hotbar slot
+            for (int i = 0; i < slotCount; i++)
+            {
+                if (Keyboard.current[hotbarKeys[i]].wasPressedThisFrame)
+                {
+                    currentSlotNumber = i;
+
+                    Debug.Log("Current slot - " + i);
+                }
+            }
+
+            // Use selected item
+            if (Mouse.current.leftButton.wasPressedThisFrame)
+            {
+                UseSelectedItem();
+            }
         }
-    }
-
-   
-    if (currentSlotNumber != previousSlotNumber)
-    {
-        HandleSlotSelectionChange(previousSlotNumber, currentSlotNumber);
-        previousSlotNumber = currentSlotNumber;
-    }
-
-
-    if (Mouse.current.leftButton.wasPressedThisFrame)
-    {
-        UseSelectedItem();
-    }
-}
-
-private void HandleSlotSelectionChange(int oldSlotIndex, int newSlotIndex)
-{
-
-    if (oldSlotIndex >= 0 && oldSlotIndex < hotbarPanel.transform.childCount)
-    {
-        Slot oldSlot = hotbarPanel.transform.GetChild(oldSlotIndex).GetComponent<Slot>();
-        if (oldSlot != null && oldSlot.currentItem != null)
-        {
-            PlaceableItem oldPlaceable = oldSlot.currentItem.GetComponent<PlaceableItem>();
-            if (oldPlaceable != null) oldPlaceable.OnDeselected();
-        }
-    }
-
-
-    if (newSlotIndex >= 0 && newSlotIndex < hotbarPanel.transform.childCount)
-    {
-        Slot newSlot = hotbarPanel.transform.GetChild(newSlotIndex).GetComponent<Slot>();
-        if (newSlot != null && newSlot.currentItem != null)
-        {
-            PlaceableItem newPlaceable = newSlot.currentItem.GetComponent<PlaceableItem>();
-            if (newPlaceable != null) newPlaceable.OnSelected();
-        }
-        else
-        {
-           
-            if (PlacementManager.Instance != null) PlacementManager.Instance.ClearPreview();
-        }
-    }
-}
         public void UseSelectedItem()
         {
             if (PauseController.IsGamePaused)
