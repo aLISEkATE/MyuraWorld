@@ -7,6 +7,7 @@ TagManager:
   - Item
   - Hoe
   - Dirt
+  - Placeable
   layers:
   - Default
   - TransparentFX
