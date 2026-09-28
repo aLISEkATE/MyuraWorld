@@ -22,6 +22,7 @@ public class PlayerItemCollector : MonoBehaviour
 
                 if (itemAdded)
                 {
+                    Debug.Log("Picked up some shi");
                     Destroy(collision.gameObject);
                 }
             }

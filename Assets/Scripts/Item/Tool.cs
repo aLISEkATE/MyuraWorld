@@ -6,6 +6,11 @@ public abstract class Tool : Item, IUse
     public override void UseItem()
 
     {
+        if (PauseController.IsGamePaused)
+        {
+             return;
+        }
+        
         Debug.Log("Using Tool " + Name);
     }
 }

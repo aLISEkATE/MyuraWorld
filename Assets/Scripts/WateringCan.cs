@@ -13,7 +13,7 @@ public class WateringCan : Tool
 
     private void WaterDirt()
     {
-        // Find the player
+        
         Transform playerTransform =
             GameObject.FindGameObjectWithTag("Player")?.transform;
 

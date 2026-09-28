@@ -19,12 +19,21 @@ public class TimeManager : MonoBehaviour
       Minute = 0;
       Hour = 6;
       Day = 1;
+
       timer = MinuteToRealTime;  
     }
-
-    // Update is called once per frame
+    public void SetTime(int day, int hour, int minute)
+    {
+        Day = day;
+        Hour = hour;
+        Minute = minute;
+    }
+        // Update is called once per frame
     void Update()
     {
+        if (PauseController.IsGamePaused)
+             return;
+       
         timer -= Time.deltaTime;
 
         if(timer <= 0)

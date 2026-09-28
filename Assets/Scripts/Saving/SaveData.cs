@@ -10,4 +10,7 @@ public class SaveData
     public List<PlaceableSaveData> placeableData;
     public List<InventorySaveData> inventorySaveData;
     public List<InventorySaveData> hotbarSaveData;
+    public int day;
+    public int hour;
+    public int minute;
 }

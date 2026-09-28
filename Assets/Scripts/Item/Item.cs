@@ -8,7 +8,7 @@ public class Item : MonoBehaviour
 {
    public int ID;
    public string Name;
-   public int quantity = 1;
+   public int quantity;
    public Sprite GetIcon()
    {
         Image image = GetComponent<Image>();
@@ -36,8 +36,11 @@ public class Item : MonoBehaviour
 
    public void AddToStack(int amount = 1)
    {
+      Debug.Log("Quantity before added stack: " + quantity);
       quantity += amount;
+      Debug.Log("Quantity after added stack: " + quantity);
       UpdateQuantityDisplay();
+      Debug.Log("Quantity after display: " + quantity);
    }
 
    public int RemoveFromStack(int amount = 1)
@@ -51,8 +54,11 @@ public class Item : MonoBehaviour
    public GameObject CloneItem(int newQuantity, Transform parent)
    {
       GameObject clone = Instantiate(gameObject, parent);
+
       Item cloneItem = clone.GetComponent<Item>();
       cloneItem.quantity = newQuantity;
+      cloneItem.UpdateQuantityDisplay();
+
       return clone;
    }
     public virtual void UseItem()

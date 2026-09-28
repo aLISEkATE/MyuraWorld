@@ -39,7 +39,7 @@ public class SaveController : MonoBehaviour
            GameObject.FindGameObjectsWithTag("Dirt");
         GameObject[] placeableObjects =
            GameObject.FindGameObjectsWithTag("Placeable");
-
+    
         Debug.Log("Found " + dirtObjects.Length + " dirt objects.");
         Debug.Log("Found " + placeableObjects.Length + " placeable objects.");
 
@@ -122,7 +122,7 @@ public class SaveController : MonoBehaviour
                 }
 
         Debug.Log(
-            "Total dirt saved: " +
+            "Total placeables saved: " +
             placeableData.Count
         );
 
@@ -145,6 +145,15 @@ public class SaveController : MonoBehaviour
         saveData.hotbarSaveData =
             hotbarController.GetHotbarItems();
 
+        saveData.day = 
+            TimeManager.Day;
+
+        saveData.hour = 
+            TimeManager.Hour;
+
+        saveData.minute = 
+            TimeManager.Minute;
+
         // Convert to JSON and save
         string json =
             JsonUtility.ToJson(saveData, true);
@@ -158,22 +167,32 @@ public class SaveController : MonoBehaviour
     }
 
     public void LoadGame()
+{
+    if (!File.Exists(saveLocation))
     {
-        if (!File.Exists(saveLocation))
-        {
-            Debug.Log("No save file found.");
+        Debug.Log("No save file found.");
+        return;
+    }
 
-            return;
-        }
+    string json = File.ReadAllText(saveLocation);
 
-        string json =
-            File.ReadAllText(saveLocation);
+    SaveData saveData =
+        JsonUtility.FromJson<SaveData>(json);
 
-        SaveData saveData =
-            JsonUtility.FromJson<SaveData>(json);      
+    
+    TimeManager timeManager = FindFirstObjectByType<TimeManager>();
 
-        GameObject player =
-            GameObject.FindGameObjectWithTag("Player");
+    if (timeManager != null)
+    {
+        timeManager.SetTime(
+            saveData.day,
+            saveData.hour,
+            saveData.minute
+        );
+    }
+
+    GameObject player =
+        GameObject.FindGameObjectWithTag("Player");
 
         if (player != null)
         {
