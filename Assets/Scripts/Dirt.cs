@@ -14,6 +14,10 @@ public class Dirt : MonoBehaviour
     public int growthDays = 0;
     public bool isGrown = false;
 
+    [Header("Plant Prefabs")]
+    [SerializeField] private PlantPrefabData[] plantPrefabs;
+    [SerializeField] private Transform plantSpawnPoint;
+    private GameObject currentPlant;
     public int GetID()
     {
         return ID;
@@ -50,7 +54,7 @@ public class Dirt : MonoBehaviour
             if (daysPassed >= growthDays)
             {
                 isGrown = true;
-
+                SpawnPlant();
                 Debug.Log(
                     $"Seed {seedID} is now fully grown!"
                 );
@@ -82,12 +86,35 @@ public class Dirt : MonoBehaviour
         hasSeed = true;
         seedID = ID;
 
-    //    daysPassed = 0;
+        daysPassed = 0;
         growthDays = requiredGrowthDays;
         isGrown = false;
 
         Debug.Log("Seed Planted!");
         Debug.Log("Seed Received ID - " + ID);
         Debug.Log("Growth required - " + growthDays + " days");
+    }
+
+    private void SpawnPlant()
+    {
+        foreach (PlantPrefabData plantData in plantPrefabs)
+        {
+            if (plantData.seedID == seedID)
+            {
+                currentPlant = Instantiate(
+                    plantData.plantPrefab,
+                    plantSpawnPoint.position,
+                    plantSpawnPoint.rotation
+                );
+
+                Debug.Log($"Spawned plant for seed ID {seedID}");
+
+                return;
+            }
+        }
+
+        Debug.LogWarning(
+            $"No plant prefab found for seed ID {seedID}!"
+        );
     }
 }
