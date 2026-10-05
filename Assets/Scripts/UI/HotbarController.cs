@@ -89,39 +89,62 @@ public class HotbarController : MonoBehaviour
             if(slot.currentItem != null)
             {
                 Item item = slot.currentItem.GetComponent<Item>();
-                hotbarData.Add(new InventorySaveData{ itemID =item.ID, slotIndex = slotTransform.GetSiblingIndex() });
+                hotbarData.Add(new InventorySaveData{ itemID = item.ID, quantity = item.quantity, slotIndex = slotTransform.GetSiblingIndex() });
             }
         }
 
          return hotbarData;
     }
 
-    public void SetHotbarItems(List<InventorySaveData> hotbarSaveData)
+ public void SetHotbarItems(List<InventorySaveData> hotbarSaveData)
+{
+    // Remove all existing slots
+    for (int i = hotbarPanel.transform.childCount - 1; i >= 0; i--)
     {
-        foreach(Transform child in hotbarPanel.transform)
-        {
-            Destroy(child.gameObject);
+        DestroyImmediate(hotbarPanel.transform.GetChild(i).gameObject);
+    }
+
+    // Create fresh slots
+    for (int i = 0; i < slotCount; i++)
+    {
+        Instantiate(slotPrefab, hotbarPanel.transform);
+    }
+
+    // Load saved items
+    foreach (InventorySaveData data in hotbarSaveData)
+    {
+        if (data.slotIndex >= slotCount)
+            continue;
+
+        Slot slot = hotbarPanel.transform
+            .GetChild(data.slotIndex)
+            .GetComponent<Slot>();
+
+        GameObject itemPrefab =
+            itemDictionary.GetItemPrefab(data.itemID);
+
+        if (itemPrefab == null)
+            continue;
+
+        GameObject item =
+            Instantiate(itemPrefab, slot.transform);
+
+        item.GetComponent<RectTransform>().anchoredPosition =
+            Vector2.zero;
+
+        Item itemComponent =
+            item.GetComponent<Item>();
+
+        if (itemComponent != null)
+        {  
+            itemComponent.UpdateQuantityDisplay();
+            itemComponent.quantity = data.quantity;
+            Debug.Log("itemComponent quanity: " + data.quantity + " for: " + data.itemID);
+            
         }
 
-        for(int i = 0; i < slotCount; i++)
-        {
-            Instantiate(slotPrefab, hotbarPanel.transform);
-        }
-        
-        foreach(InventorySaveData data in hotbarSaveData)
-        {
-            if(data.slotIndex < slotCount)
-            {
-                Slot slot = hotbarPanel.transform.GetChild(data.slotIndex).GetComponent<Slot>();
-                GameObject itemPrefab = itemDictionary.GetItemPrefab(data.itemID);
-                if(itemPrefab != null)
-                {
-                    GameObject item = Instantiate(itemPrefab, slot.transform);
-                    item.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
-                    slot.currentItem = item;
-                }
-            }
-        }
+        slot.currentItem = item;
     }
+}
 }
 

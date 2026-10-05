@@ -1,3 +1,4 @@
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UIElements;
@@ -12,13 +13,14 @@ public class ItemDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     public float maxDropDistance = 0.5f;
 
     private InventoryController inventoryController;
+    private GameObject menu;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         canvasGroup = GetComponent<CanvasGroup>(); 
         inventoryController = InventoryController.Instance;
+        menu = GameObject.Find("Menu");
     }
-
   
     public void OnBeginDrag(PointerEventData eventData)
     {
@@ -156,8 +158,10 @@ public class ItemDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     {
         if(eventData.button == PointerEventData.InputButton.Right)
         {
-            SplitStack();
+              SplitStack();  
         }
+        
+
     }
 
     private void SplitStack()

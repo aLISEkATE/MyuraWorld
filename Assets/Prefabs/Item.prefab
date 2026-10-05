@@ -244,6 +244,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ItemDragHandler
   minDropDistance: 0.2
   maxDropDistance: 0.5
+  menu: {fileID: 0}
 --- !u!212 &-4253762749250758944
 SpriteRenderer:
   serializedVersion: 2
@@ -337,8 +338,8 @@ CircleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 1.0593338}
-  m_Radius: 49.07824
+  m_Offset: {x: 0, y: 0}
+  m_Radius: 1
 --- !u!114 &-5902020565304439051
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -351,6 +352,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d49db8b14880c3547af9765ecf2a5d20, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Item
-  ID: 0
+  ID: 1
   Name: Item
   quantity: 0
