@@ -15,7 +15,6 @@ public class HotbarController : MonoBehaviour
 
     private Key[] hotbarKeys;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     private void Awake()
     {
         itemDictionary = FindFirstObjectByType<ItemDictionary>();
@@ -41,8 +40,6 @@ public class HotbarController : MonoBehaviour
                 if (Keyboard.current[hotbarKeys[i]].wasPressedThisFrame)
                 {
                     currentSlotNumber = i;
-
-                    Debug.Log("Current slot - " + i);
                 }
             }
 
@@ -139,7 +136,6 @@ public class HotbarController : MonoBehaviour
         {  
             itemComponent.quantity = data.quantity;
             itemComponent.UpdateQuantityDisplay();
-            Debug.Log("itemComponent quanity: " + data.quantity + " for: " + data.itemID);
             
         }
 

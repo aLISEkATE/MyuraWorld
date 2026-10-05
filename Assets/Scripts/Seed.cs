@@ -10,6 +10,7 @@ public class Seed : Tool
 
     [Header("Growth Settings")]
     [SerializeField] private int growthDays = 3;
+    public GameObject plantPrefab;
     private int plantedDay;
     private int daysPassed;
     public bool isGrown;
@@ -52,8 +53,7 @@ public class Seed : Tool
                 Debug.Log("There is already a seed in this dirt!");
                 return;
             } 
-                dirt.Plant(ID, growthDays);
-                Debug.Log("Seed planted ID -" + ID );
+                dirt.Plant(ID, growthDays, plantPrefab);
                 return;
             }
            

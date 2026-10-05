@@ -41,9 +41,6 @@ public class WateringCan : Tool
 
             if (Vector2.Distance(dirtPosition, snappedPosition) < 0.01f)
             {
-                Debug.Log("Found Dirt!");
-
-                // Water the dirt
                 dirt.Water();
 
                 return;

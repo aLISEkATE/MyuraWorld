@@ -8,5 +8,6 @@ public class PauseController : MonoBehaviour
     public static void SetPause( bool pause)
     {
        IsGamePaused = pause; 
+       Debug.Log("Game Paused");
     }
 }

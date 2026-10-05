@@ -1,3 +1,5 @@
+using System.Runtime.CompilerServices;
+using UnityEditor.Rendering;
 using UnityEngine;
 
 public class Dirt : MonoBehaviour
@@ -8,16 +10,14 @@ public class Dirt : MonoBehaviour
     public bool isWatered;
     public bool hasSeed;
     public int seedID;
+    public GameObject plantPrefab;
 
     [Header("Seed Growth")]
     public int daysPassed = 0;
     public int growthDays = 0;
     public bool isGrown = false;
+    private Seed seed;
 
-    [Header("Plant Prefabs")]
-    [SerializeField] private PlantPrefabData[] plantPrefabs;
-    [SerializeField] private Transform plantSpawnPoint;
-    private GameObject currentPlant;
     public int GetID()
     {
         return ID;
@@ -28,17 +28,21 @@ public class Dirt : MonoBehaviour
         ID = id;
     }
 
+    void Update()
+    {
+        SpawnPlant();
+    }
     private void OnEnable()
     {
-        TimeManager.onDayChanged += OnDayChanged;
+        TimeManager.onDayChanged += UpdateSeedGrowth;
     }
 
     private void OnDisable()
     {
-        TimeManager.onDayChanged -= OnDayChanged;
+        TimeManager.onDayChanged -= UpdateSeedGrowth;
     }
 
-    private void OnDayChanged()
+    private void UpdateSeedGrowth()
 {
     // If there is a seed, check whether it was watered
     if (hasSeed && !isGrown)
@@ -81,7 +85,7 @@ public class Dirt : MonoBehaviour
         Debug.Log("Dirt watered!");
     }
 
-    public void Plant(int ID, int requiredGrowthDays)
+    public void Plant(int ID, int requiredGrowthDays, GameObject plantPrefab)
     {
         hasSeed = true;
         seedID = ID;
@@ -89,32 +93,24 @@ public class Dirt : MonoBehaviour
         daysPassed = 0;
         growthDays = requiredGrowthDays;
         isGrown = false;
+        this.plantPrefab = plantPrefab;
 
         Debug.Log("Seed Planted!");
-        Debug.Log("Seed Received ID - " + ID);
         Debug.Log("Growth required - " + growthDays + " days");
     }
 
     private void SpawnPlant()
-    {
-        foreach (PlantPrefabData plantData in plantPrefabs)
+    {   
+         Dirt[] existingDirt = FindObjectsByType<Dirt>(
+            FindObjectsSortMode.None
+        );
+
+        foreach(Dirt dirt in existingDirt)
         {
-            if (plantData.seedID == seedID)
+            if (isGrown && dirt.transform.childCount == 0)
             {
-                currentPlant = Instantiate(
-                    plantData.plantPrefab,
-                    plantSpawnPoint.position,
-                    plantSpawnPoint.rotation
-                );
-
-                Debug.Log($"Spawned plant for seed ID {seedID}");
-
-                return;
+                Instantiate(plantPrefab, transform.position, Quaternion.identity, transform);
             }
         }
-
-        Debug.LogWarning(
-            $"No plant prefab found for seed ID {seedID}!"
-        );
     }
 }

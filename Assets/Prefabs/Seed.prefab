@@ -213,6 +213,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d930c9760c361614fa7acbdba3519136, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Seed
-  ID: 0
+  ID: 3
   Name: Seed
+  quantity: 0
   gridSize: 1
+  growthDays: 3
+  plantPrefab: {fileID: 367452497402697988, guid: 45e9964e32a005b4ebe5281303986a5f, type: 3}
+  isGrown: 0

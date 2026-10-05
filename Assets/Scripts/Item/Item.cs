@@ -36,11 +36,8 @@ public class Item : MonoBehaviour
 
    public void AddToStack(int amount = 1)
    {
-      Debug.Log("Quantity before added stack: " + quantity);
       quantity += amount;
-      Debug.Log("Quantity after added stack: " + quantity);
       UpdateQuantityDisplay();
-      Debug.Log("Quantity after display: " + quantity);
    }
 
    public int RemoveFromStack(int amount = 1)

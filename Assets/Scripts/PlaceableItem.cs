@@ -28,7 +28,7 @@ public class PlaceableItem : Tool
 
         if (placeablePrefab == null)
         {
-            Debug.LogError("Assign a placeablePrefab to the Hoe.");
+            Debug.LogError("Assign a placeablePrefab to the PlaceableItem.");
             return;
         }
 
@@ -112,7 +112,7 @@ public class PlaceableItem : Tool
                 if (item == null)
                 {
                     Debug.LogError(
-                        "The Hoe inventory object does not have an Item component!"
+                        "The PlaceableItem inventory object does not have an Item component!"
                     );
                     return;
                 }
@@ -123,7 +123,7 @@ public class PlaceableItem : Tool
                     item.RemoveFromStack(1);
 
                     Debug.Log(
-                        "Removed 1 Hoe from stack. Remaining: " +
+                        "Removed 1 Placeable from stack. Remaining: " +
                         item.quantity
                     );
                 }
@@ -134,7 +134,7 @@ public class PlaceableItem : Tool
 
                     Destroy(gameObject);
 
-                    Debug.Log("Removed last Hoe from inventory.");
+                    Debug.Log("Removed last Placeable from inventory.");
                 }
 
                 return;
@@ -142,7 +142,7 @@ public class PlaceableItem : Tool
         }
 
         Debug.LogError(
-            "Could not find a Slot containing this Hoe!"
+            "Could not find a Slot containing this Placeable!"
         );
     }
 }
