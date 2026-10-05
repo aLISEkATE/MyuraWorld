@@ -9,7 +9,7 @@ public class ItemDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     Transform originalParent;
     CanvasGroup canvasGroup;
 
-    public float minDropDistance = 0.2f;
+    public float minDropDistance = 0.4f;
     public float maxDropDistance = 0.5f;
 
     private InventoryController inventoryController;
@@ -116,44 +116,90 @@ public class ItemDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
        return RectTransformUtility.RectangleContainsScreenPoint(inventoryRect, mousePosition);
     }
 
+void DropItem(Slot originalSlot)
+{
+    Item item = GetComponent<Item>();
 
-    void DropItem(Slot originalSlot)
+    if (item == null)
     {
-        Item item = GetComponent<Item>();
-        int quantity = item.quantity;
+        Debug.LogError("DropItem: Item component is missing.");
+        return;
+    }
 
-        if(quantity > 1)
+    // Remember the quantity before removing anything.
+    int originalQuantity = item.quantity;
+
+    // Find the player.
+    GameObject player = GameObject.FindGameObjectWithTag("Player");
+
+    if (player == null)
+    {
+        Debug.LogError("DropItem: Missing 'Player' tag.");
+        return;
+    }
+
+    Transform playerTransform = player.transform;
+
+    // Remove the item from the inventory slot.
+    originalSlot.currentItem = null;
+
+    // Spawn one world item for EVERY item in the stack.
+    for (int i = 0; i < originalQuantity; i++)
+    {
+        // Pick a random direction.
+        Vector2 randomDirection = Random.insideUnitCircle;
+
+        // Prevent a zero-length direction.
+        if (randomDirection.sqrMagnitude < 0.01f)
         {
-            item.RemoveFromStack();
+            randomDirection = Vector2.right;
+        }
 
-            transform.SetParent(originalParent);
-            GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+        randomDirection.Normalize();
 
-            quantity = 1;
+        // Pick a random distance from the player.
+        float dropDistance = Random.Range(
+            minDropDistance,
+            maxDropDistance
+        );
+
+        // Calculate this item's individual drop position.
+        Vector2 dropPosition =
+            (Vector2)playerTransform.position +
+            randomDirection * dropDistance;
+
+        // Spawn one item.
+        GameObject dropItem = Instantiate(
+            gameObject,
+            dropPosition,
+            Quaternion.identity
+        );
+
+        // Make sure it isn't part of the inventory hierarchy.
+        dropItem.transform.SetParent(null);
+
+        // Re-apply the world position.
+        dropItem.transform.position = dropPosition;
+
+        // Every dropped object represents exactly ONE item.
+        Item droppedItem = dropItem.GetComponent<Item>();
+
+        if (droppedItem != null)
+        {
+            droppedItem.quantity = 1;
         }
         else
         {
-            originalSlot.currentItem = null;
-        }
-        originalSlot.currentItem = null;
-        Transform playerTransform = GameObject.FindGameObjectWithTag("Player")?.transform;
-        if(playerTransform == null)
-        {
-            Debug.LogError("missing 'Player' tag");
-        }
-
-        Vector2 dropOffset = Random.insideUnitCircle.normalized * Random.Range(minDropDistance, maxDropDistance);
-
-        Vector2 dropPosition = (Vector2)playerTransform.position + dropOffset;
-        GameObject dropItem = Instantiate(gameObject, dropPosition, Quaternion.identity);
-        Item droppedItem = dropItem.GetComponent<Item>();
-        droppedItem.quantity = 1;
-
-        if(quantity <= 1 && originalSlot.currentItem == null)
-        {
-           Destroy(gameObject); 
+            Debug.LogError(
+                "DropItem: Spawned object has no Item component."
+            );
         }
     }
+
+    // Destroy the inventory object containing the stack.
+    Destroy(gameObject);
+}
+
      public void OnPointerClick(PointerEventData eventData)
     {
         if(eventData.button == PointerEventData.InputButton.Right)

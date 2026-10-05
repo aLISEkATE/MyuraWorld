@@ -141,12 +141,12 @@ public class InventoryController : MonoBehaviour
 
         if (itemComponent != null)
         {  
-            itemComponent.UpdateQuantityDisplay();
-            itemComponent.quantity = data.quantity;
+             itemComponent.quantity = data.quantity;
+              itemComponent.UpdateQuantityDisplay();
             Debug.Log("itemCOmponent quanity: " + data.quantity + " for: " + data.itemID);
             
         }
-
+         slot.currentItem = item;
     }
 }
 }

@@ -8,6 +8,7 @@ TagManager:
   - Hoe
   - Dirt
   - Placeable
+  - Clickable
   layers:
   - Default
   - TransparentFX

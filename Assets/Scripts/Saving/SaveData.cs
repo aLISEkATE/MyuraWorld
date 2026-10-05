@@ -9,7 +9,7 @@ public class SaveData
     public List<DirtSaveData> dirtData;
     public List<PlaceableSaveData> placeableData;
     public List<InventorySaveData> inventorySaveData;
-    public List<InventorySaveData> hotbarSaveData;
+    public List<HotbarSaveData> hotbarSaveData;
     public int day;
     public int hour;
     public int minute;

@@ -80,23 +80,23 @@ public class HotbarController : MonoBehaviour
                 Debug.Log("Selected item cannot be used.");
             }
         }
-    public List<InventorySaveData> GetHotbarItems()
+    public List<HotbarSaveData> GetHotbarItems()
     {
-        List<InventorySaveData> hotbarData = new List<InventorySaveData>();
+        List<HotbarSaveData> hotbarData = new List<HotbarSaveData>();
         foreach(Transform slotTransform in hotbarPanel.transform)
         {
             Slot slot = slotTransform.GetComponent<Slot>();
             if(slot.currentItem != null)
             {
                 Item item = slot.currentItem.GetComponent<Item>();
-                hotbarData.Add(new InventorySaveData{ itemID = item.ID, quantity = item.quantity, slotIndex = slotTransform.GetSiblingIndex() });
+                hotbarData.Add(new HotbarSaveData{ itemID = item.ID, quantity = item.quantity, slotIndex = slotTransform.GetSiblingIndex() });
             }
         }
 
          return hotbarData;
     }
 
- public void SetHotbarItems(List<InventorySaveData> hotbarSaveData)
+ public void SetHotbarItems(List<HotbarSaveData> hotbarSaveData)
 {
     // Remove all existing slots
     for (int i = hotbarPanel.transform.childCount - 1; i >= 0; i--)
@@ -111,7 +111,7 @@ public class HotbarController : MonoBehaviour
     }
 
     // Load saved items
-    foreach (InventorySaveData data in hotbarSaveData)
+    foreach (HotbarSaveData data in hotbarSaveData)
     {
         if (data.slotIndex >= slotCount)
             continue;
@@ -137,8 +137,8 @@ public class HotbarController : MonoBehaviour
 
         if (itemComponent != null)
         {  
-            itemComponent.UpdateQuantityDisplay();
             itemComponent.quantity = data.quantity;
+            itemComponent.UpdateQuantityDisplay();
             Debug.Log("itemComponent quanity: " + data.quantity + " for: " + data.itemID);
             
         }
