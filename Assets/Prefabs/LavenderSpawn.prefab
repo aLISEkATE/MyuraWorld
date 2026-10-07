@@ -1,0 +1,67 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &518552425180150114
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 3001357782003575112, guid: 8d4e9919d4cb2464b85ae7fa9069a01e, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -4.509
+      objectReference: {fileID: 0}
+    - target: {fileID: 3001357782003575112, guid: 8d4e9919d4cb2464b85ae7fa9069a01e, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.64226
+      objectReference: {fileID: 0}
+    - target: {fileID: 3001357782003575112, guid: 8d4e9919d4cb2464b85ae7fa9069a01e, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3001357782003575112, guid: 8d4e9919d4cb2464b85ae7fa9069a01e, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3001357782003575112, guid: 8d4e9919d4cb2464b85ae7fa9069a01e, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3001357782003575112, guid: 8d4e9919d4cb2464b85ae7fa9069a01e, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3001357782003575112, guid: 8d4e9919d4cb2464b85ae7fa9069a01e, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3001357782003575112, guid: 8d4e9919d4cb2464b85ae7fa9069a01e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3001357782003575112, guid: 8d4e9919d4cb2464b85ae7fa9069a01e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3001357782003575112, guid: 8d4e9919d4cb2464b85ae7fa9069a01e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3454055379642906627, guid: 8d4e9919d4cb2464b85ae7fa9069a01e, type: 3}
+      propertyPath: itemPrefab
+      value: 
+      objectReference: {fileID: 4035822355791157628, guid: d96e78e886ef53d4cae94a8d44fe5d90, type: 3}
+    - target: {fileID: 8849940490244814271, guid: 8d4e9919d4cb2464b85ae7fa9069a01e, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 866045185, guid: b9a79ffefd817e24f8f0dc0098076ebb, type: 3}
+    - target: {fileID: 9031965944950704962, guid: 8d4e9919d4cb2464b85ae7fa9069a01e, type: 3}
+      propertyPath: m_Name
+      value: LavenderSpawn
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 8d4e9919d4cb2464b85ae7fa9069a01e, type: 3}

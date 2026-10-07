@@ -200,13 +200,12 @@ void DropItem(Slot originalSlot)
     Destroy(gameObject);
 }
 
-     public void OnPointerClick(PointerEventData eventData)
+    public void OnPointerClick(PointerEventData eventData)
     {
-        if(eventData.button == PointerEventData.InputButton.Right)
+        if (eventData.button == PointerEventData.InputButton.Right)
         {
-              SplitStack();  
+            SplitStack();
         }
-        
 
     }
 
@@ -238,5 +237,6 @@ void DropItem(Slot originalSlot)
         item.AddToStack(splitAmount);
         Destroy(newItem);
     }
+
 }
  
