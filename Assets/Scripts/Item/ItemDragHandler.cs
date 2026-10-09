@@ -13,13 +13,12 @@ public class ItemDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     public float maxDropDistance = 0.5f;
 
     private InventoryController inventoryController;
-    private GameObject menu;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         canvasGroup = GetComponent<CanvasGroup>(); 
         inventoryController = InventoryController.Instance;
-        menu = GameObject.Find("Menu");
     }
   
     public void OnBeginDrag(PointerEventData eventData)
