@@ -13,24 +13,39 @@ public class SaveController : MonoBehaviour
     private InventoryController inventoryController;
     private HotbarController hotbarController;
 
+    
     private void Start()
-    {
+    {   Debug.Log("SaveController Start is running!");
         saveLocation = Path.Combine(
             Application.persistentDataPath,
             "saveData.json"
         );
-
         inventoryController =
             FindFirstObjectByType<InventoryController>();
 
         hotbarController =
             FindFirstObjectByType<HotbarController>();
 
-        LoadGame();
+        Debug.Log(
+            "CURRENT SCENE: " +
+            UnityEngine.SceneManagement.SceneManager
+                .GetActiveScene().name
+        );
+            if (UnityEngine.SceneManagement.SceneManager
+    .GetActiveScene().name == "SampleScene")
+        {
+            Debug.Log("Starting LoadGame...");
+            LoadGame();
+        }
+        else
+        {
+            Debug.LogWarning("Not in SampleScene. Save not loaded.");
+        }
+       
     }
 
     public void SaveGame()
-    {
+    {     Debug.Log("SAVE BUTTON PRESSED!");
         // Find player
         GameObject player =
             GameObject.FindGameObjectWithTag("Player");
@@ -170,16 +185,25 @@ public class SaveController : MonoBehaviour
 {
     if (!File.Exists(saveLocation))
     {
-        Debug.Log("No save file found.");
+        Debug.Log("No save file found. Starting fresh.");
         return;
     }
 
     string json = File.ReadAllText(saveLocation);
 
-    SaveData saveData =
-        JsonUtility.FromJson<SaveData>(json);
+    if (string.IsNullOrWhiteSpace(json))
+    {
+        Debug.LogWarning("Save file is empty. Starting fresh.");
+        return;
+    }
 
-    
+    SaveData saveData = JsonUtility.FromJson<SaveData>(json);
+
+    if (saveData == null)
+    {
+        Debug.LogError("Save data could not be loaded.");
+        return;
+    }
     TimeManager timeManager = FindFirstObjectByType<TimeManager>();
 
     if (timeManager != null)

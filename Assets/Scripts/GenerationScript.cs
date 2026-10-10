@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class GenerateScript : MonoBehaviour
 {
-    [SerializeField] private GameObject testPrefab;
     [SerializeField] private List<GameObject> spawnItemList;
     [SerializeField] private List<GameObject> spawnAreaList;
 

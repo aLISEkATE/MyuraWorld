@@ -25,8 +25,18 @@ public class HotbarController : MonoBehaviour
             hotbarKeys[i] = i < 9 ? (Key)((int)Key.Digit1 + i) : Key.Digit0;
         }
     }
+        private void Start()
+    {
+        // Generate hotbar slots when the game starts
+        for (int i = 0; i < slotCount; i++)
+        {
+            Instantiate(slotPrefab, hotbarPanel.transform);
+        }
 
-        // Update is called once per frame
+        // Select the first slot by default
+        currentSlotNumber = 0;
+    }
+            // Update is called once per frame
         private void Update()
         {
             if (PauseController.IsGamePaused)

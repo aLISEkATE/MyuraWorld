@@ -15987,6 +15987,10 @@ PrefabInstance:
       value: GameController
       objectReference: {fileID: 0}
     - target: {fileID: 4813982287958155850, guid: e422bb30a5fba3e429920926a4917f75, type: 3}
+      propertyPath: slotCount
+      value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 4813982287958155850, guid: e422bb30a5fba3e429920926a4917f75, type: 3}
       propertyPath: inventoryPanel
       value: 
       objectReference: {fileID: 1855560598}

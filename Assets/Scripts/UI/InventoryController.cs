@@ -25,7 +25,21 @@ public class InventoryController : MonoBehaviour
         Instance = this;
         itemDictionary = FindFirstObjectByType<ItemDictionary>(); 
     }
- 
+   
+    private void Start()
+    {
+        // Create empty inventory slots.
+        for (int i = 0; i < slotCount; i++)
+        {
+            Slot slot = Instantiate(
+                slotPrefab,
+                inventoryPanel.transform
+            ).GetComponent<Slot>();
+
+            slot.currentItem = null;
+        }
+    }
+
     // public int GetItemCount(int itemID)
     // {
     // int count = 0;
